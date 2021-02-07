@@ -49,12 +49,31 @@ main {
 
 /* ABSOLUTE POSITIONED ELEMENTS */
 
-#dice {
+/*
+#player {
   position: absolute;
-  left: 555px;
+  left: 100px;
   top: 100px;
-  /* transform: translateX(-50%); */
+
   height: 3rem;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2);
+}
+*/
+
+#enemy--1 {
+  left: 400px;
+  top: 400px;
+  height: 4rem;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2);
+}
+
+.player {
+  position: absolute;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2);
+}
+
+.enemy {
+  position: absolute;
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2);
 }
 

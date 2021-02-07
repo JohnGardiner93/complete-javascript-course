@@ -36,7 +36,6 @@ function calcAge(birthYear) {
 const firstName = `John`;
 calcAge(1991);
 console.log(firstName);
-*/
 
 //Hoisting
 
@@ -79,3 +78,167 @@ let y = 2;
 const z = 3;
 
 console.log(x === window.x);
+
+
+//The this keyword
+
+// Function
+// console.log(this);
+const calcAge = function (birthYear) {
+  console.log(2037 - birthYear);
+  // console.log(this);
+};
+
+// calcAge(1991);
+
+//Arrow Function
+const calcAgeArrow = birthYear => {
+  console.log(2037 - birthYear);
+  // console.log(this);
+};
+
+// calcAgeArrow(2015);
+
+//Object
+const jonas = {
+  year: 1991,
+  calcAge: function () {
+    console.log(this);
+    console.log(2037 - this.year);
+  },
+};
+jonas.calcAge();
+
+const matilda = {
+  year: 2017,
+};
+
+//Method Borrowing
+matilda.calcAge = jonas.calcAge;
+matilda.calcAge();
+
+const f = jonas.calcAge;
+
+f();
+
+
+// Regular Functions vs Arrow Functions
+
+// var firstName = `matilda`;
+
+const jonas = {
+  firstName: `Jonas`,
+  year: 1991,
+  calcAge: function () {
+    console.log(this);
+    console.log(2037 - this.year);
+    
+    // Solution 1
+    // const self = this;
+    // const isMillenial = function () {
+      //   console.log(self);
+      //   console.log(self.year >= 1981 && self.year <= 1996);
+      // };
+      // isMillenial();
+      
+      // Solution 2
+      const self = this;
+      const isMillenial = () => {
+        console.log(this);
+        console.log(this.year >= 1981 && this.year <= 1996);
+      };
+      isMillenial();
+    },
+    
+    greet: () => {
+      console.log(`Hey ${this.firstName}`);
+      console.log(this);
+    },
+  };
+  
+  jonas.greet();
+  jonas.calcAge();
+  
+  // Arguments keyword
+  const addExpr = function (a, b) {
+    console.log(arguments);
+    return a + b;
+  };
+  
+  addExpr(2, 5);
+  addExpr(2, 5, 8, 12);
+  
+  var addArrow = (a, b) => {
+    console.log(arguments);
+    return a + b;
+  };
+  
+  addArrow(2, 5, 8);
+  
+  
+  // Primitives vs Objects (Primitive vs. Reference Types)
+  
+  let age = 30;
+  
+  let oldAge = age;
+  
+  age = 31;
+  
+  console.log(age);
+  console.log(oldAge);
+  
+  const me = {
+    name: `Jonas`,
+    age: 30,
+  };
+  
+  const friend = me;
+  
+  friend.age = 27;
+  console.log(`Friend`, friend);
+  console.log(`Jonas`, me);
+  
+  */
+
+// Primitives vs. Objects in Practice
+
+let lastName = `Williams`;
+
+let oldLastName = lastName;
+
+lastName = `Davis`;
+
+console.log(lastName);
+console.log(oldLastName);
+
+const jessica = {
+  firstName: `Jessica`,
+  lastName: `Williams`,
+  age: 28,
+};
+
+const marriedJessica = jessica;
+
+marriedJessica.lastName = `Davis`;
+console.log(`Before Marriage: `, jessica);
+console.log(`AFter Marriage`, marriedJessica);
+
+// marriedJessica = {}; DOES NOT WORK since variable is a const
+
+//Copying objects (Shallow copies)
+const jessica2 = {
+  firstName: `Jessica`,
+  lastName: `Williams`,
+  age: 28,
+  family: [`Alice`, `Bob`],
+};
+
+const jessicaCopy = Object.assign({}, jessica2);
+
+jessicaCopy.lastName = `Davis`;
+
+jessicaCopy.family.push(`Mary`);
+jessicaCopy.family.push(`John`);
+
+console.log(jessica2);
+console.log(jessicaCopy);
