@@ -12,6 +12,7 @@ const pixelizeNumber = function (num) {
   return num + `px`;
 };
 
+/*
 //Move an Entity (element)
 const moveEntity = function (id, direction, position) {
   const entityStyle = document.getElementById(`${id}`).style;
@@ -31,6 +32,7 @@ const moveEntity = function (id, direction, position) {
       return -1;
   }
 };
+*/
 
 //Objects
 function Entity(
@@ -70,6 +72,8 @@ function Entity(
           break;
         case `right`:
           this.posLeft += this.movementIncrement;
+          // console.log(this.posLeft);
+          break;
         default:
           return -1;
       }
@@ -108,6 +112,8 @@ const player = new Entity(
   `player`,
   `dice-5.png`
 );
+
+const enemy1 = new Entity(400, 400, 20, 25, `enemy--1`, `enemy`, `dice-1.png`);
 
 //Player movement handling & inputs
 document.addEventListener(`keypress`, function (k) {
