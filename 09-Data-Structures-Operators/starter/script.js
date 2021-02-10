@@ -40,7 +40,156 @@ const restaurant = {
       `Order Received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}`
     );
   },
+
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(
+      `Here is your delicious pasta with ${ing1}, ${ing2}, and ${ing3}`
+    );
+  },
+
+  orderPizza: function (mainIngredient, ...otherIngredients) {
+    console.log(mainIngredient, otherIngredients);
+  },
 };
+
+/*
+///////////////////////////////////////
+// The Nullish Coalescing Operator
+restaurant.numGuests = 0;
+
+//OR
+const guests = restaurant.numGuests || 10;
+console.log(guests);
+
+// Nullish
+const guestCorrect = restaurant.numGuests ?? 10;
+console.log(guestCorrect);
+
+////////////////////////////////////////////
+// Short Circuiting (&& and ||)
+console.log(`-------------OR-------------`);
+
+console.log(3 || `Jonas`);
+console.log(`` || `Jonas`);
+console.log(true || 0);
+console.log(undefined || null);
+console.log(0 || undefined);
+
+console.log(undefined || 0 || `` || `Hello` || 23 || null);
+
+restaurant.numGuests = 0;
+const guests1 = restaurant.numGuests ? restaurant.numGuests : 10;
+console.log(guests1);
+
+const guests2 = restaurant.numGuests || 10;
+console.log(guests2);
+
+console.log(`--------AND---------`);
+console.log(0 && `Jonas`);
+console.log(7 && `Jonas`);
+console.log(7 && 0);
+
+console.log(`Hello` && 23 && null && `jonas`);
+
+//Practical Example
+if (restaurant.orderPizza) {
+  restaurant.orderPizza(`mushrooms`, `spinach`);
+}
+
+restaurant.orderPizza && restaurant.orderPizza(`mushrooms`, `spinach`);
+
+////////////////////////////////////////////
+// Rest pattern and parameters
+
+//Destructuring
+
+const arr = [1, 2, ...[3, 4]];
+console.log(arr);
+
+const [a, b, ...others] = [1, 2, 3, 4, 5];
+console.log([a, b, others]);
+
+const [pizza, , risotto, ...otherFood] = [
+  ...restaurant.mainMenu,
+  ...restaurant.starterMenu,
+];
+console.log(pizza, risotto, otherFood);
+
+//Objects
+const { sat, ...weekDays } = restaurant.openingHours;
+console.log(weekDays);
+
+// Functions
+const add = function (...numbers) {
+  let sum = 0;
+  for (let i = 0; i < numbers.length; i++) {
+    sum += numbers[i];
+  }
+  console.log(sum);
+};
+
+add(2, 3);
+add(5, 3, 7, 2);
+
+const x = [23, 5, 7];
+add(...x);
+
+restaurant.orderPizza(`mushrooms`, `onion`, `olives`, `spinach`);
+restaurant.orderPizza(`mushrooms`);
+////////////////////////////////////////////
+//Spread Operator
+
+//crappy way
+const arr = [7, 8, 9];
+const badNewArr = [1, 2, arr[0], arr[1], arr[2]];
+console.log(badNewArr);
+
+//spread method way
+const newArr = [1, 2, ...arr];
+console.log(newArr);
+
+console.log(...newArr);
+
+const newMenu = [...restaurant.mainMenu, `Gnocci`];
+console.log(newMenu);
+
+//Copy Array
+const mainMenuCopy = [...restaurant.mainMenu];
+console.log(mainMenuCopy);
+
+//Join 2 arrays
+const menu = [...restaurant.mainMenu, ...restaurant.starterMenu];
+console.log(menu);
+
+//Works on iterables
+const str = `Jonas`;
+const letters = [...str, ' ', 'S.'];
+console.log(letters);
+console.log(...str);
+
+//Real-world example
+const ingredients = [
+  prompt(`Let's make pasta! Ingredient 1?`),
+  prompt(`Let's make pasta! Ingredient 2?`),
+  prompt(`Let's make pasta! Ingredient 3?`),
+];
+
+restaurant.orderPasta(...ingredients);
+
+
+//Objects
+const newRestaurant = { foundedIn: 1998, ...restaurant, founder: `Guiseppe` };
+console.log(newRestaurant);
+
+const restaurantCopy = { ...restaurant };
+
+restaurantCopy.name = `Jerry's Basghetti`;
+console.log(restaurantCopy.name);
+console.log(restaurant.name);
+
+/*
+////////////////////////////////////////////
+Destructuring Objects
 
 restaurant.orderDelivery({
   time: `22:30`,
@@ -83,7 +232,6 @@ const {
 } = openingHours;
 console.log(o, c);
 
-/*
 ///////////////////////////////////////////////*
 Destructuring Arrays
 const arr = [2, 3, 4];
@@ -125,3 +273,98 @@ const [p = 1, q = 1, r = 1] = [8, 9];
 console.log(p, q, r);
 
 */
+
+/*
+///////////////////////////////////////
+CODING CHALLENGE #1
+We're building a football betting app (soccer for my American friends 😅)!
+Suppose we get data from a web service about a certain game ('game' variable on
+next page). In this challenge we're gonna work with that data.
+
+Your tasks:
+1. Create one player array for each team (variables 'players1' and 'players2')
+
+2. The first player in any player array is the goalkeeper and the others are field players. For Bayern Munich (team 1) create one variable ('gk') with the goalkeeper's name, and one array ('fieldPlayers') with all the remaining 10 field players
+
+3. Create an array 'allPlayers' containing all players of both teams (22 players)
+
+4. During the game, Bayern Munich (team 1) used 3 substitute players. So create a new array ('players1Final') containing all the original team1 players plus 'Thiago', 'Coutinho' and 'Perisic'
+
+5. Based on the game.odds object, create one variable for each odd (called 'team1', 'draw' and 'team2')
+
+6. Write a function ('printGoals') that receives an arbitrary number of player names (not an array) and prints each of them to the console, along with the number of goals that were scored in total (number of player names passed in)
+
+7. The team with the lower odd is more likely to win. Print to the console which team is more likely to win, without using an if/else statement or the ternary operator.
+
+Test data for 6.: First, use players 'Davies', 'Muller', 'Lewandowski' and 'Kimmich'. Then, call the function again with players from game.scored
+
+GOOD LUCK 😀
+*/
+
+const game = {
+  team1: 'Bayern Munich',
+  team2: 'Borrussia Dortmund',
+  players: [
+    [
+      'Neuer',
+      'Pavard',
+      'Martinez',
+      'Alaba',
+      'Davies',
+      'Kimmich',
+      'Goretzka',
+      'Coman',
+      'Muller',
+      'Gnarby',
+      'Lewandowski',
+    ],
+    [
+      'Burki',
+      'Schulz',
+      'Hummels',
+      'Akanji',
+      'Hakimi',
+      'Weigl',
+      'Witsel',
+      'Hazard',
+      'Brandt',
+      'Sancho',
+      'Gotze',
+    ],
+  ],
+  score: '4:0',
+  scored: ['Lewandowski', 'Gnarby', 'Lewandowski', 'Hummels'],
+  date: 'Nov 9th, 2037',
+  odds: {
+    team1: 1.33,
+    x: 3.25,
+    team2: 6.5,
+  },
+};
+
+const [players1, players2] = game.players;
+const [gk, ...fieldPlayers] = players1;
+
+const callPlayers = [...players1, ...players2];
+
+const players1Final = [...players1, `Thiago`, `Couthinho`, `Perisic`];
+// console.log(players1Final);
+
+const { team1, x: draw, team2 } = { ...game.odds };
+// console.log(team1, draw, team2);
+
+const printGoals = function (...players) {
+  console.log(players);
+  let i = 0;
+  for (; i < players.length; i++) {
+    console.log(players[i]);
+  }
+  console.log(`${i} goals were scored`);
+};
+
+printGoals(`Davies`, `Muller`, `Lewandowski`, `Kimmich`);
+printGoals(...game.scored);
+
+let projectedWinner = team1 - team2 > 0 ? `Team 2` : `Team 1`;
+
+console.log(projectedWinner);
