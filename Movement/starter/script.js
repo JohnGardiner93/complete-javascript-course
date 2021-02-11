@@ -113,7 +113,8 @@ const player = new Entity(
   `dice-5.png`
 );
 
-const enemy1 = new Entity(400, 400, 20, 25, `enemy--1`, `enemy`, `dice-1.png`);
+const enemy1 = new Entity(400, 400, 20, 50, `enemy--1`, `enemy`, `dice-1.png`);
+const enemy2 = new Entity(400, 450, 20, 25, `enemy--2`, `enemy`, `dice-1.png`);
 
 //Player movement handling & inputs
 document.addEventListener(`keypress`, function (k) {
@@ -130,3 +131,12 @@ document.addEventListener(`keypress`, function (k) {
     player.move(`right`);
   }
 });
+
+const enemy1Pattern = function () {
+  enemy1.move(`up`);
+  // enemy1.move(`left`);
+  // enemy1.move(`down`);
+  // enemy1.move(`right`);
+};
+
+setInterval(enemy1Pattern, 1000);

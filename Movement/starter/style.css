@@ -60,12 +60,12 @@ main {
 }
 */
 
-#enemy--1 {
+/* #enemy--1 {
   left: 400px;
   top: 400px;
   height: 4rem;
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.2);
-}
+} */
 
 .player {
   position: absolute;
