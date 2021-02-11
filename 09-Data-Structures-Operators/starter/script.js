@@ -6,6 +6,7 @@ const flights =
 
 const weekdays = [`mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`];
 
+// Enhanced Object Literals
 const openingHours = {
   [weekdays[3]]: {
     open: 12,
@@ -52,6 +53,37 @@ const restaurant = {
     console.log(mainIngredient, otherIngredients);
   },
 };
+/*
+
+///////////////////////////////////////
+// Looping Objects: Object Keys, Values, and Entries
+
+// Property Names
+const properties = Object.keys(openingHours);
+console.log(properties);
+
+let openStr = `We are open on ${properties.length} days`;
+
+for (const day of properties) {
+  openStr += `${day}`;
+}
+
+// Property Values
+const values = Object.values(openingHours);
+console.log(values);
+
+// Entire object
+const entries = Object.entries(openingHours);
+console.log(entries);
+
+// [key, value]
+for (const [key, { open, close }] of entries) {
+  console.log(`on ${key} we open at ${open} and close at ${close}`);
+}
+
+///////////////////////////////////////
+Optional Chaining
+
 
 if (restaurant.openingHours && restaurant.openingHours.mon) {
   console.log(restaurant.openingHours.mon.open);
@@ -66,14 +98,26 @@ const days = [`mon`, `tue`, `wed`, `thu`, `fri`, `sat`, `sun`];
 
 for (const day of days) {
   // console.log(day);
-  const open = restaurant.openingHours[day]?.open;
+  const open = restaurant.openingHours[day]?.open ?? `closed`;
   console.log(`On ${day}, we open at ${open}`);
 }
 
-///////////////////////////////////////
-// Enhanced Object Literals
+// Methods
+console.log(restaurant.order?.(0, 1) ?? `Method does not exist`);
+console.log(restaurant.orderRisotto?.(0, 1) ?? `Method does not exist`);
 
-/*
+// Arrays
+const users = [{ name: `Jonas`, email: `hello@jonas.io` }];
+// const users = [];
+
+console.log(users[0]?.name ?? `User array empty`);
+
+if (users.length > 0) console.log(users[0].name);
+else console.log(`User array empty`);
+
+///////////////////////////////////////
+
+
 
 
 ///////////////////////////////////////
@@ -91,7 +135,8 @@ for (const [i, el] of menu.entries()) {
 
 // console.log(...menu.entries());
 
-
+*/
+/*
 ///////////////////////////////////////
 CODING CHALLENGE #1
 We're building a football betting app (soccer for my American friends 😅)!
@@ -116,7 +161,7 @@ Your tasks:
 Test data for 6.: First, use players 'Davies', 'Muller', 'Lewandowski' and 'Kimmich'. Then, call the function again with players from game.scored
 
 GOOD LUCK 😀
-
+*/
 const game = {
   team1: 'Bayern Munich',
   team2: 'Borrussia Dortmund',
@@ -158,6 +203,7 @@ const game = {
   },
 };
 
+/*
 // 1.
 const [players1, players2] = game.players;
 
@@ -202,8 +248,53 @@ team1 < team2 && console.log(`Team 1 is more likely to win`);
 team2 < team1 && console.log(`Team 2 is more likely to win`);
 
 // console.log(projectedWinner);
+*/
+/*
+////////////////////////////////////////////
+CODING CHALLENEGE #2:
 
+Let's continue with our football betting app! Keep using the 'game' variable from before.
 
+Your tasks:
+1. Loop over the game.scored array and print each player name to the console, along with the goal number (Example: "Goal 1: Lewandowski")
+2. Use a loop to calculate the average odd and log it to the console (We already studied how to calculate averages, you can go check if you don't remember)
+3. Print the 3 odds to the console, but in a nice formatted way, exactly like this:   
+ - Odd of victory Bayern Munich: 1.33
+ - Odd of draw: 3.25
+ - Odd of victory Borrussia Dortmund: 6.5
+Get the team names directly from the game object, don't hardcode them (except for "draw"). Hint: Note how the odds and the game objects have the same property names 😉
+4. Bonus: Create an object called 'scorers' which contains the names of the players who scored as properties, and the number of goals as the value. In this game, it will look like this:
+  {
+  Gnarby: 1,
+  Hummels: 1,
+  Lewandowski: 2
+  }
+*/
+
+// 1.
+for (const [num, player] of game.scored.entries()) {
+  console.log(`Goal ${num + 1}: ${player}`);
+}
+
+// 2.
+let tot = 0;
+let i = 0;
+for (const odd of Object.values(game.odds)) {
+  tot += odd;
+  i++;
+}
+
+console.log(`Average odds: ${tot / i}`);
+
+// 3.
+for (const [key, value] of Object.entries(game.odds)) {
+  // console.log(key, value);
+  let x = '';
+  x = game[key] && `victory`;
+  console.log(`Odds of ${x} ${game[key] ?? `draw`}: ${value}`);
+}
+
+/*
 ///////////////////////////////////////
 // The Nullish Coalescing Operator
 restaurant.numGuests = 0;
