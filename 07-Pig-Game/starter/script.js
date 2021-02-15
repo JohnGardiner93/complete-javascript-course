@@ -32,6 +32,9 @@ const switchPlayer = function () {
   player1El.classList.toggle(`player--active`);
 };
 
+console.log(btnRoll);
+console.log(typeof btnRoll);
+
 //Rolling Dice Functionality
 btnRoll.addEventListener(`click`, function () {
   if (playing) {
