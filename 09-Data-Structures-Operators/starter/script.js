@@ -61,6 +61,7 @@ const flights =
 
 // console.log(flights);
 
+// My Solution
 const flightSplit = flights.split(`+`);
 
 console.log(flightSplit);
@@ -76,6 +77,24 @@ for (const entry of flightSplit) {
     .toUpperCase()} (${hour}h${min})`;
 
   console.log(message.padStart(50, ' '));
+}
+
+// His solution
+
+const getCode = str => str.slice(0, 3).toUpperCase();
+
+console.log(flights.split(`+`));
+
+for (const f of flights.split(`+`)) {
+  const [type, from, to, time] = f.split(`;`);
+  const output = `${type.startsWith(`_Delayed`) ? `🔴` : ``}${type.replaceAll(
+    `_`,
+    ` `
+  )} from ${getCode(from)} to ${getCode(to)} (${time.replace(
+    ':',
+    'h'
+  )})`.padStart(50);
+  console.log(output);
 }
 
 ///////////////////////////////////////
