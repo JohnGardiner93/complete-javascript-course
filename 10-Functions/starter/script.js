@@ -270,4 +270,38 @@ const poll = {
   options: [`0: JavaScript`, `1: Python`, `2: Rust`, `3: C++`],
   // This generates [0,0,0,0]. More in the next section.
   answers: new Array(4).fill(0),
+  registerNewAnswer: function () {
+    const answer = Number(
+      prompt(
+        `${this.question}\n${this.options.join('\n')}\n(Write option number)`
+      )
+    );
+
+    answer < this.answers.length && answer >= 0
+      ? this.answers[answer]++
+      : console.log(`Not a valid number`);
+    displayResults.call(this.answers);
+  },
 };
+
+document
+  .querySelector(`.poll`)
+  .addEventListener(`click`, poll.registerNewAnswer.bind(poll));
+
+// console.log(poll.answers);
+
+const displayResults = function (type = `array`) {
+  if (type.toLowerCase() === 'array') {
+    console.log(this);
+  } else if (type.toLowerCase() === `string`) {
+    const message = `Poll results are ${this.join(`, `)}`;
+    console.log(message);
+  } else {
+    console.log(`Who am I...`);
+  }
+};
+
+displayResults.call([5, 2, 3], `string`);
+displayResults.call([5, 2, 3]);
+displayResults.call([1, 5, 3, 9, 6, 1], `string`);
+displayResults.call([1, 5, 3, 9, 6, 1]);
