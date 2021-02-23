@@ -61,9 +61,12 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
+
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? `deposit` : `withdrawal`;
 
     const html = `
@@ -145,6 +148,7 @@ btnLogin.addEventListener(`click`, function (e) {
     }`;
 
     containerApp.style.opacity = 100;
+
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = ``;
     inputLoginPin.blur();
@@ -207,6 +211,14 @@ btnClose.addEventListener(`click`, function (e) {
     containerApp.style.opacity = 0;
   }
   inputClosePin.value = inputCloseUsername.value = ``;
+});
+
+let sorted = false;
+
+btnSort.addEventListener(`click`, function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
 });
 
 /////////////////////////////////////////////////
@@ -607,7 +619,6 @@ const deposit = mov => mov > 0;
 console.log(movements.some(deposit));
 console.log(movements.every(deposit));
 console.log(movements.filter(deposit));
-*/
 
 ////////////////////////////////////////////
 // Flat and FlatMap
@@ -629,3 +640,47 @@ const overallBalance = accounts
   .flatMap(acc => acc.movements)
   .reduce((acc, mov) => acc + mov);
 console.log(overallBalance);
+
+
+////////////////////////////////////////////
+// Sorting Arrays
+
+// Strings
+const owners = [`Jonas`, `Zach`, `Adam`, `Martha`];
+console.log(owners.sort());
+console.log(owners);
+
+// Numbers
+console.log(movements);
+// console.log(movements.sort()); // doesn't work properly for numbers w/o parameters
+
+// Return < 0, A, B (keep order)
+// Return > 0 B, A (switch order)
+// ascending order
+movements.sort((a, b) => a - b);
+
+console.log(movements);
+
+// descending order
+movements.sort((a, b) => b - a);
+console.log(movements);
+*/
+
+////////////////////////////////////////////
+// More Ways of Creating and Filling Arrays
+
+// By hand
+const arr = [1, 2, 3, 4, 5, 6, 7];
+console.log(new Array(1, 2, 3, 4, 5, 6, 7));
+
+// Empty arrays + fill method
+const x = new Array(7); //creates new array with 7 empty elements
+console.log(x);
+// console.log(x.map(() => 5));
+
+// x.fill(1);
+x.fill(1, 3);
+console.log(x);
+
+arr.fill(23, 2, 6);
+console.log(arr);
