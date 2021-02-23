@@ -664,7 +664,6 @@ console.log(movements);
 // descending order
 movements.sort((a, b) => b - a);
 console.log(movements);
-*/
 
 ////////////////////////////////////////////
 // More Ways of Creating and Filling Arrays
@@ -678,9 +677,82 @@ const x = new Array(7); //creates new array with 7 empty elements
 console.log(x);
 // console.log(x.map(() => 5));
 
-// x.fill(1);
+x.fill(1);
 x.fill(1, 3);
 console.log(x);
 
 arr.fill(23, 2, 6);
 console.log(arr);
+
+// Array.from
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y);
+
+const z = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(z);
+
+// --- Mini-Challenge - 100 Random dice roll challenge ---
+const diceRolls = Array.from({ length: 100 }, () =>
+  Math.trunc(Math.random() * 7)
+);
+// console.log(diceRolls);
+
+// c
+
+labelBalance.addEventListener(`click`, function () {
+  const movementsUI = Array.from(
+    document.querySelectorAll(`.movements__value`),
+    el => Number(el.textContent.replace('EUR', ''))
+  );
+  console.log(movementsUI);
+
+  // Another way
+
+  const movementsUI2 = [...document.querySelectorAll(`movements__value`)];
+});
+*/
+
+////////////////////////////////////////////
+// Array Methods Practice
+
+// 1. Calculate how much has been deposited in the bank
+const bankDepositSum = accounts
+  .flatMap(acc => acc.movements)
+  .filter(mov => mov > 0)
+  .reduce((acc, cur) => acc + cur, 0);
+console.log(bankDepositSum);
+
+// 2. Calculate how many deposits there have been in the bank with at least 1000 dollars
+
+// Method 1 - flatMap + filter + length
+// const numDeposits1000 = accounts
+//   .flatMap(acc => acc.movements)
+//   .filter(mov => mov >= 1000).length;
+// console.log(numDeposits1000);
+
+// Method 2 - Reduce method
+const numDeposits1000 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((acc, cur) => (cur >= 1000 ? ++acc : acc), 0);
+console.log(numDeposits1000);
+
+let a = 10;
+console.log(++a);
+console.log(a);
+
+// 3. Create a new object instead of just a number or a string using reduce.
+// Create an object which contains a sum of the deposits and of the withdrawals
+const { deposits, withdrawals } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sums, cur) => {
+      // cur > 0 ? (sums.deposits += cur) : (sums.withdrawals += cur);
+      sums[cur > 0 ? `deposits` : `withdrawals`] += cur;
+      return sums;
+    },
+    { deposits: 0, withdrawals: 0 }
+  );
+console.log(deposits, withdrawals);
+
+// Challenge - Re-create challenges above using only arrays and reduce method
+// Array-Versions
