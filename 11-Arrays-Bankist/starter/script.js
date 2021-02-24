@@ -870,9 +870,12 @@ const dogs = [
 ];
 
 // My solution
+
 // 1.
 const calcFoodPortion = function (dogs) {
-  dogs.forEach(dog => (dog.recommendedFood = dog.weight ** 0.75 * 28));
+  dogs.forEach(
+    dog => (dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28))
+  );
 };
 
 calcFoodPortion(dogs);
@@ -884,16 +887,112 @@ const findDogByOwner = (dogs, name) =>
     .map(dog => dog.owners)
     .reduce((result, owner, i) => (owner.includes(name) ? i : result), -1);
 
-const foodAmountCheck = dog =>
-  // true = good
-  dog.curFood <= dog.recommendedFood * 1.1 &&
-  dog.curFood >= dog.recommendedFood * 0.9;
+const sarahDog = findDogByOwner(dogs, `Sarah`);
 
-console.log(findDogByOwner(dogs, `Sarah`));
+console.log(
+  `Sarah's dog eats too ${
+    sarahDog.curFood > sarahDog.recommendedFood ? `much` : `little`
+  }!`
+);
 
-console.log(foodAmountCheck(findDogByOwner(dogs, `Alice`)));
-console.log(foodAmountCheck(findDogByOwner(dogs, `Matilda`)));
-console.log(foodAmountCheck(findDogByOwner(dogs, `Sarah`)));
-console.log(foodAmountCheck(findDogByOwner(dogs, `Michael`)));
+// 3.
+const { ownersEatTooMuch, ownersEatTooLittle } = dogs.reduce(
+  (acc, dog) => {
+    acc[
+      dog.curFood > dog.recommendedFood
+        ? `ownersEatTooMuch`
+        : `ownersEatTooLittle`
+    ].push(...dog.owners);
+    return acc;
+  },
+  { ownersEatTooMuch: [], ownersEatTooLittle: [] }
+);
 
-// Determine if it is correct
+console.log(ownersEatTooLittle, ownersEatTooMuch);
+
+// 4.
+console.log(`${ownersEatTooLittle.join(` and `)}'s dogs eat too little!`);
+console.log(`${ownersEatTooMuch.join(` and `)}'s dogs eat too much!`);
+
+// 5.
+console.log(
+  `There are ${
+    dogs.some(dogs => dogs.curFood === dogs.recommendedFood) ? `some` : `no`
+  } dogs eating exactly the right amount`
+);
+
+// 6.
+console.log(
+  dogs.some(
+    dogs =>
+      dogs.curFood < dogs.recommendedFood * 1.1 &&
+      dogs.curFood > dogs.recommendedFood * 0.9
+  )
+);
+
+// 7.
+const okayDogs = dogs.filter(
+  dog =>
+    dog.curFood < dog.recommendedFood * 1.1 &&
+    dog.curFood > dog.recommendedFood * 0.9
+);
+console.log(okayDogs);
+
+// 8.
+const dogsCopy = dogs.slice();
+console.log(dogsCopy);
+
+dogsCopy.sort((a, b) => a.recommendedFood - b.recommendedFood);
+console.log(dogsCopy);
+
+// ----- His solution -----
+console.log(`His Solutions`);
+// 1.
+dogs.forEach(
+  dog => (dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28))
+);
+
+// 2.
+const dogSarah = dogs.find(dog => dog.owners.includes(`Sarah`));
+console.log(dogSarah);
+console.log(
+  `Sarah's dog is eating ${
+    dogSarah.curFood > dogSarah.recommendedFood ? `much` : `too little`
+  }`
+);
+
+// 3.
+const ownersEatTooMuch2 = dogs
+  .filter(dog => dog.curFood > dog.recommendedFood)
+  .flatMap(dog => dog.owners);
+console.log(ownersEatTooMuch2);
+
+const ownersEatTooLittle2 = dogs
+  .filter(dog => dog.curFood < dog.recommendedFood)
+  .flatMap(dog => dog.owners);
+console.log(ownersEatTooLittle2);
+
+// 4.
+console.log(`${ownersEatTooMuch2.join(` and `)}'s dogs eat too much!`);
+console.log(`${ownersEatTooLittle2.join(` and `)}'s dogs eat too litte!`);
+
+// 5.
+console.log(dogs.some(dog => dog.curFood === dog.recommendedFood));
+
+// 6.
+
+const checkEatingOkay = dog =>
+  dog.curFood > dog.recommendedFood * 0.9 &&
+  dog.curFood < dog.recommendedFood * 1.1;
+
+console.log(dogs.some(dog => checkEatingOkay(dog)));
+
+// 7.
+console.log(dogs.filter(dog => checkEatingOkay(dog)));
+
+// 8.
+const dogsSorted = dogs
+  .slice()
+  .sort((a, b) => a.recommendedFood - b.recommendedFood);
+
+console.log(dogsSorted);
