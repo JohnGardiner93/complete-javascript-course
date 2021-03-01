@@ -31,7 +31,6 @@ document.addEventListener('keydown', function (e) {
 });
 
 /*
- */
 
 ////////////////////////////////////////////
 ////////////////////////////////////////////
@@ -124,3 +123,85 @@ logo.classList.contains(`c`);
 
 // DON"T USE THIS - OVERWRITES ALL EXISTING CLASSES
 // logo.className = `jonas`;
+////////////////////////////////////////////
+// Implementing Smooth Scrolling
+
+const btnScrollTo = document.querySelector(`.btn--scroll-to`);
+const section1 = document.querySelector(`#section--1`);
+
+btnScrollTo.addEventListener(`click`, function (e) {
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+
+  console.log(e.target.getBoundingClientRect());
+
+  console.log(`Current scroll X/y`, window.pageXOffset, window.pageYOffset);
+
+  console.log(
+    `height/width`,
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // Scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // );
+
+  // Old School way
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  // Modern Way
+  section1.scrollIntoView({ behavior: `smooth` });
+});
+
+////////////////////////////////////////////
+// Types of Events and Event Handlers
+
+const h1 = document.querySelector(`h1`);
+
+const alertH1 = function (e) {
+  alert(`addEventListener: Great! You are reading the heading! :D`);
+};
+
+h1.addEventListener(`mouseenter`, alertH1);
+
+setTimeout(() => h1.removeEventListener(`mouseenter`, alertH1), 5000);
+
+// h1.onmouseenter = function (e) {
+//   alert(`onmouseenter: Great! You are reading the heading!:D`);
+// };
+
+*/
+////////////////////////////////////////////
+// Event Propagation: Bubbling and Capturing
+
+// rgb(255,255,255)
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+
+document.querySelector(`.nav__link`).addEventListener(`click`, function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log(`LINK`, e.target, e.currentTarget);
+
+  // Stop propagation
+  // e.stopPropagation();
+});
+
+document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log(`CONTAINER`, e.target, e.currentTarget);
+});
+
+document.querySelector(`.nav`).addEventListener(`click`, function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log(`NAV`, e.target, e.currentTarget);
+});
