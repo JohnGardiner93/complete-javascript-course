@@ -7,6 +7,8 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScrollTo = document.querySelector(`.btn--scroll-to`);
+const section1 = document.querySelector(`#section--1`);
 
 const openModal = function (e) {
   e.preventDefault();
@@ -30,11 +32,98 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-/*
+////////////////////////////////////////////
+// Implementing Smooth Scrolling
+btnScrollTo.addEventListener(`click`, function (e) {
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+
+  console.log(e.target.getBoundingClientRect());
+
+  console.log(`Current scroll X/y`, window.pageXOffset, window.pageYOffset);
+
+  console.log(
+    `height/width`,
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // Scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // );
+
+  // Old School way
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  // Modern Way
+  section1.scrollIntoView({ behavior: `smooth` });
+});
 
 ////////////////////////////////////////////
-////////////////////////////////////////////
+// Page Navigation
+
+// document.querySelectorAll(`.nav__link`).forEach(function (el) {
+//   el.addEventListener(`click`, function (e) {
+//     e.preventDefault();
+//     const id = this.getAttribute(`href`);
+//     console.log(id);
+
+//     document.querySelector(id).scrollIntoView({ behavior: `smooth` });
+//   });
+// });
+
+// More efficient way
+// 1. Add event listener to common parent element
+// 2. Determine what element originated the event
+
+document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
+  console.log(e.target);
+  e.preventDefault();
+
+  // Matching Strategy
+  if (e.target.classList.contains(`nav__link`)) {
+    const id = e.target.getAttribute(`href`);
+    console.log(id);
+    document.querySelector(id).scrollIntoView({ behavior: `smooth` });
+  }
+});
+
+// Tabbed Components
+const tabs = document.querySelectorAll(`.operations__tab`);
+const tabsContainer = document.querySelector(`.operations__tab-container`);
+const tabsContent = document.querySelectorAll(`.operations__content`);
+
+// tabs.forEach(t => t.addEventListener(`click`, () => console.log(`TAB`)));
+
+tabsContainer.addEventListener(`click`, function (e) {
+  const clicked = e.target.closest(`.operations__tab`);
+
+  // Guard Clause
+  if (!clicked) return;
+
+  // Remove active classes
+  tabs.forEach(t => t.classList.remove(`operations__tab--active`));
+  tabsContent.forEach(c => c.classList.remove(`operations__content--active`));
+
+  // Activate tab
+  clicked.classList.add(`operations__tab--active`);
+
+  // Activate content area
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add(`operations__content--active`);
+});
+
+/*
 // Lectures
+////////////////////////////////////////////
+////////////////////////////////////////////
 ////////////////////////////////////////////
 // Selecting, Creating, and Deleting Elements
 // Selecting Elements
@@ -123,42 +212,7 @@ logo.classList.contains(`c`);
 
 // DON"T USE THIS - OVERWRITES ALL EXISTING CLASSES
 // logo.className = `jonas`;
-////////////////////////////////////////////
-// Implementing Smooth Scrolling
 
-const btnScrollTo = document.querySelector(`.btn--scroll-to`);
-const section1 = document.querySelector(`#section--1`);
-
-btnScrollTo.addEventListener(`click`, function (e) {
-  const s1coords = section1.getBoundingClientRect();
-  console.log(s1coords);
-
-  console.log(e.target.getBoundingClientRect());
-
-  console.log(`Current scroll X/y`, window.pageXOffset, window.pageYOffset);
-
-  console.log(
-    `height/width`,
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
-
-  // Scrolling
-  // window.scrollTo(
-  //   s1coords.left + window.pageXOffset,
-  //   s1coords.top + window.pageYOffset
-  // );
-
-  // Old School way
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // });
-
-  // Modern Way
-  section1.scrollIntoView({ behavior: `smooth` });
-});
 
 ////////////////////////////////////////////
 // Types of Events and Event Handlers
@@ -177,7 +231,6 @@ setTimeout(() => h1.removeEventListener(`mouseenter`, alertH1), 5000);
 //   alert(`onmouseenter: Great! You are reading the heading!:D`);
 // };
 
-*/
 ////////////////////////////////////////////
 // Event Propagation: Bubbling and Capturing
 
@@ -205,3 +258,37 @@ document.querySelector(`.nav`).addEventListener(`click`, function (e) {
   this.style.backgroundColor = randomColor();
   console.log(`NAV`, e.target, e.currentTarget);
 });
+////////////////////////////////////////////
+// DOM Traversing
+const h1 = document.querySelector(`h1`);
+
+// Going downwards: childs
+console.log(h1.querySelectorAll(`.highlight`));
+console.log(h1.childNodes);
+console.log(h1.children);
+console.log(h1.firstElementChild);
+h1.firstElementChild.style.color = `white`;
+console.log(h1.lastElementChild);
+h1.lastElementChild.style.color = `red`;
+
+// Going upwards
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+
+h1.closest(`.header`).style.background = `var(--gradient-secondary)`;
+h1.closest(`h1`).style.background = `var(--gradient-secondary)`;
+
+// Going sideways
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function (el) {
+  if (el !== h1) {
+    el.style.transform = `scale(0.5)`;
+  }
+});
+*/
