@@ -498,45 +498,69 @@ console.log(jay);
 jay.introduce();
 */
 
+/*
 ////////////////////////////////////////////
 // Another Class Example
 // Encapsulation: Protected Properties and Methods
+// Encapsulation: Private Class Fields and Methods
+
+// 1) Public Fields
+// 2) Private Fields
+// 3) Public Methods
+// 4) Private Methods
+// (There is also the static version)
 
 class Account {
+  // 1) Public Fields (instances)
+  locale = navigator.locale;
+
+  // 2) Private fields
+  #movements = [];
+  #pin;
+
   constructor(owner, currency, pin) {
     this.owner = owner;
     this.currency = currency;
-    this.locale = navigator.language;
+    // this.locale = navigator.language;
     // protected property
-    this._movements = [];
-    this._pin = pin;
+    // this._movements = [];
+    this.#pin = pin;
 
     console.log(`Thanks for opening an account, ${owner}`);
   }
 
-  // Public Interface
+  // 3) Public Methods (Public Interface)
   getMovements() {
-    return this._movements;
+    return this.#movements;
   }
 
   deposit(val) {
-    this._movements.push(val);
+    this.#movements.push(val);
+    return this;
   }
 
   withdraw(val) {
     this.deposit(-val);
+    return this;
   }
 
   // Protected method (internal use only)
-  _approveLoan(val) {
-    return true;
-  }
 
   requestLoan(val) {
     if (this._approveLoan(val)) {
       this.deposit(val);
       console.log(`Loan Approved`);
     }
+    return this;
+  }
+
+  // 4) Private Methods
+  _approveLoan(val) {
+    return true;
+  }
+
+  static helper() {
+    console.log(`Helper`);
   }
 }
 
@@ -550,3 +574,79 @@ console.log(acc1.getMovements());
 
 console.log(acc1);
 console.log(acc1._pin);
+
+// console.log(acc1.#movements);
+
+////////////////////////////////////////////
+// Chaining
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+console.log(acc1.getMovements());
+
+
+*/
+////////////////////////////////////////////
+// Coding Challenge #4
+
+/* 
+1. Re-create challenge #3, but this time using ES6 classes: create an 'EVCl' child class of the 'CarCl' class
+2. Make the 'charge' property private;
+3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. They experiment with chining!
+
+DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
+
+GOOD LUCK 😀
+*/
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`The ${this.make} is now going ${this.speed} km/h.`);
+    return this;
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`The ${this.make} is now going ${this.speed} km/h.`);
+    return this;
+  }
+}
+
+class EVCl extends CarCl {
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    return this;
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge--;
+    console.log(
+      `${this.make} going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }%`
+    );
+    return this;
+  }
+}
+
+const evCar = new EVCl(`Rivian`, 120, 23);
+
+evCar
+  .accelerate()
+  .accelerate()
+  .brake()
+  .chargeBattery(100)
+  .accelerate()
+  .accelerate();
