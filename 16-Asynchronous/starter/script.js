@@ -3,6 +3,11 @@
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText(`beforeend`, msg);
+  countriesContainer.style.opacity = 1;
+};
+
 ///////////////////////////////////////
 // Our First AJAX Call: XMLHttpRequest
 /*
@@ -44,6 +49,7 @@ getCountryData(`USA`);
 
 ////////////////////////////////////////////
 // Welcome to Callback Hell
+*/
 
 const renderCountry = function (data, className = '') {
   const html = `
@@ -62,7 +68,7 @@ const renderCountry = function (data, className = '') {
   `;
 
   countriesContainer.insertAdjacentHTML(`beforeend`, html);
-  countriesContainer.style.opacity = 1;
+  //   countriesContainer.style.opacity = 1;
 };
 
 const getCountryAndNeighbor = function (country) {
@@ -99,19 +105,18 @@ const getCountryAndNeighbor = function (country) {
   });
 };
 
-getCountryAndNeighbor(`USA`);
+// getCountryAndNeighbor(`USA`);
 // getCountryAndNeighbor(`portugal`);
 
-setTimeout(() => {
-  console.log(`1 second passed`);
-  setTimeout(() => {
-    console.log(`2 second passed`);
-    setTimeout(() => {
-      console.log(`3 second passed`);
-    }, 1000);
-  }, 1000);
-}, 1000);
-*/
+// setTimeout(() => {
+//   console.log(`1 second passed`);
+//   setTimeout(() => {
+//     console.log(`2 second passed`);
+//     setTimeout(() => {
+//       console.log(`3 second passed`);
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
 
 ////////////////////////////////////////////
 // Promises and the Fetch API
@@ -121,5 +126,57 @@ request.open(`GET`, `https://restcountries.eu/rest/v2/name/${country}`);
 request.send();
 */
 
-const request = fetch(`https://restcountries.eu/rest/v2/name/USA`);
-console.log(request);
+// const request = fetch(`https://restcountries.eu/rest/v2/name/USA`);
+// console.log(request);
+
+////////////////////////////////////////////
+// Consuming Promises, Chaining Promises
+
+// --- Verbose version
+// const getCountryData = function (country) {
+//   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+//     .then(function (response) {
+//       console.log(response);
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       console.log(data);
+//       renderCountry(data[0]);
+//     });
+// };
+
+// --- Simplified version
+const getCountryData = function (country) {
+  fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+    .then(response => {
+      console.log(response);
+
+      if (!response.ok)
+        throw new Error(`Country not found (${response.status})`);
+      return response.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+      //   const neighbor = data[0].borders[0];
+      const neighbor = `kjasnd`;
+
+      if (!neighbor) return;
+
+      // Country 2
+      return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbor}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data, `neighbour`))
+    .catch(err => {
+      renderError(`Something went wrong 💀 ${err.message}. Try again!`);
+      console.error(`${err} 👻`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+btn.addEventListener(`click`, function () {
+  getCountryData(`USA`);
+});
+
+// getCountryData(`dsdsdsdsdsdsd`);
