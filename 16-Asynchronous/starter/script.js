@@ -251,7 +251,6 @@ TEST COORDINATES 2: 19.037, 72.873
 TEST COORDINATES 2: -33.933, 18.474
 
 GOOD LUCK 😀
-*/
 
 // My solution
 const whereAmI = function (lat, lng) {
@@ -315,3 +314,78 @@ whereAmI([...test2]);
 whereAmI([...test3]);
 // whereAmI([...test4]);
 // whereAmI([151651616516516, 9898]);
+
+*/
+
+/*
+////////////////////////////////////////////
+// The Event Loop in Practice
+console.log(`Test start`);
+setTimeout(() => console.log(`0 sec timer`), 0);
+Promise.resolve(`Resolved Promise 1`).then(res => console.log(res));
+Promise.resolve(`Resolved prmoise 2`).then(res => {
+  for (let i = 0; i < 1000000000; i++) {}
+  console.log(res);
+});
+console.log(`Test end`);
+
+for (let i = 0; i < 1000; i++) {
+  console.log(`looping`);
+}
+*/
+
+////////////////////////////////////////////
+// Building a Simple Promise
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log(`Lottery draw is happening 🔮`);
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve(`You WIN 🤑`);
+    } else {
+      reject(new Error(`You LOSE 😿`));
+    }
+  }, 2000);
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+// Promisifying setTimeout
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+// Much flatter and more readable queued asynchronous functions
+wait(1)
+  .then(() => {
+    console.log(`1 second passed`);
+    return wait(1);
+  })
+  .then(() => {
+    console.log(`2 second passed`);
+    return wait(1);
+  })
+  .then(() => {
+    console.log(`3 second passed`);
+    return wait(1);
+  })
+  .then(() => {
+    console.log(`4 second passed`);
+  });
+
+// Compare to this callbackhell:
+
+// setTimeout(() => {
+//   console.log(`1 second passed`);
+//   setTimeout(() => {
+//     console.log(`2 second passed`);
+//     setTimeout(() => {
+//       console.log(`3 second passed`);
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
+
+Promise.resolve(`abc`).then(x => console.log(x));
+Promise.reject(new Error(`abc`)).catch(x => console.log(x));
