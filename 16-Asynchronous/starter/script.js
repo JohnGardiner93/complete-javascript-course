@@ -125,7 +125,6 @@ const getCountryAndNeighbor = function (country) {
 const request = new XMLHttpRequest();
 request.open(`GET`, `https://restcountries.eu/rest/v2/name/${country}`);
 request.send();
-*/
 
 // const request = fetch(`https://restcountries.eu/rest/v2/name/USA`);
 // console.log(request);
@@ -225,6 +224,7 @@ const getCountryData = function (country) {
 btn.addEventListener(`click`, function () {
   getCountryData(`USA`);
 });
+*/
 
 ///////////////////////////////////////
 // Coding Challenge #1
@@ -332,7 +332,6 @@ console.log(`Test end`);
 for (let i = 0; i < 1000; i++) {
   console.log(`looping`);
 }
-*/
 
 ////////////////////////////////////////////
 // Building a Simple Promise
@@ -349,6 +348,7 @@ const lotteryPromise = new Promise(function (resolve, reject) {
 });
 
 lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+*/
 
 // Promisifying setTimeout
 const wait = function (seconds) {
@@ -356,6 +356,8 @@ const wait = function (seconds) {
     setTimeout(resolve, seconds * 1000);
   });
 };
+
+/*
 
 // Much flatter and more readable queued asynchronous functions
 wait(1)
@@ -375,6 +377,7 @@ wait(1)
     console.log(`4 second passed`);
   });
 
+
 // Compare to this callbackhell:
 
 // setTimeout(() => {
@@ -389,3 +392,139 @@ wait(1)
 
 Promise.resolve(`abc`).then(x => console.log(x));
 Promise.reject(new Error(`abc`)).catch(x => console.log(x));
+*/
+
+////////////////////////////////////////////
+// Promisifying the Geolocation API
+
+// console.log(`Getting position`);
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition(
+    //   position => resolve(position),
+    //   err => reject(err)
+    // );
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+// const position = getPosition().then(pos => console.log(pos));
+
+// Promisify Coding Challenge #1
+const whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      return fetch(`https://geocode.xyz/${lat},${lng}?json=1`);
+    })
+
+    // Reverse Geocoding
+
+    .then(response => {
+      if (response.status === 403) throw new Error(`You're going too fast!`);
+      if (!response.ok) throw new Error(`API call went poorly ${res.status}`);
+      return response.json();
+    })
+    .then(data => {
+      const country = data.country;
+      const city = data.city;
+      console.log(country, city);
+
+      if (!data) throw new Error(`No data collected`);
+      if (city === undefined || country === undefined)
+        throw new Error(`Coordinates lead to unknown location`);
+      console.log(`You are in ${city}, ${country}`);
+      // console.log(data);
+      return data.country;
+    })
+
+    // Display Countries
+    .then(country =>
+      // console.log(data);
+      fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+        .then(response => {
+          if (!response.ok)
+            throw new Error(`Country not found: ${response.status})`);
+          return response.json();
+        })
+        .then(data => {
+          // Select the correct country
+          const [correctCountry] = data.filter(cur => cur.name === country);
+
+          renderCountry(correctCountry);
+        })
+
+        .catch(err => {
+          renderError(`Something went wrong 💀 ${err.message}. Try again!`);
+          console.error(`${err} 👻`);
+        })
+        .finally(() => {
+          countriesContainer.style.opacity = 1;
+        })
+    );
+};
+
+btn.addEventListener(`click`, whereAmI);
+
+///////////////////////////////////////
+// Coding Challenge #2
+
+/* 
+Build the image loading functionality that I just showed you on the screen.
+
+Tasks are not super-descriptive this time, so that you can figure out some stuff on your own. Pretend you're working on your own 😉
+
+PART 1
+1. Create a function 'createImage' which receives imgPath as an input. This function returns a promise which creates a new image (use document.createElement('img')) and sets the .src attribute to the provided image path. When the image is done loading, append it to the DOM element with the 'images' class, and resolve the promise. The fulfilled value should be the image element itself. In case there is an error loading the image ('error' event), reject the promise.
+
+If this part is too tricky for you, just watch the first part of the solution.
+
+PART 2
+2. Comsume the promise using .then and also add an error handler;
+3. After the image has loaded, pause execution for 2 seconds using the wait function we created earlier;
+4. After the 2 seconds have passed, hide the current image (set display to 'none'), and load a second image (HINT: Use the image element returned by the createImage promise to hide the current image. You will need a global variable for that 😉);
+5. After the second image has loaded, pause execution for 2 seconds again;
+6. After the 2 seconds have passed, hide the current image.
+
+TEST DATA: Images in the img folder. Test the error handler by passing a wrong image path. Set the network speed to 'Fast 3G' in the dev tools Network tab, otherwise images load too fast.
+
+GOOD LUCK 😀
+*/
+
+// My Solution
+let img;
+
+const imagesContainer = document.querySelector(`.images`);
+
+const createImage = function (imgPath) {
+  return new Promise((resolve, reject) => {
+    const imgEl = document.createElement(`img`);
+    imgEl.src = imgPath;
+    imgEl.onerror = () => reject(new Error(`Image path not valid: ${imgPath}`));
+    imgEl.onload = () => {
+      imagesContainer.insertAdjacentElement(`beforeend`, imgEl);
+      resolve(imgEl);
+    };
+  });
+};
+
+createImage(`\\img\\img-14.jpg`)
+  .then(response => {
+    img = response;
+    return wait(2);
+  })
+  .then(() => {
+    img.style.display = `none`;
+    return createImage(`\\img\\img-2.jpg`);
+  })
+  .then(response => {
+    img = response;
+    return wait(2);
+  })
+  .then(() => {
+    img.style.display = `none`;
+  })
+  .catch(err => console.error(err));
+
+// His Solution
