@@ -474,13 +474,18 @@ const controlRecipes = async function () {
     await model.loadRecipe(id); // 2)) Rendering Recipe
 
     _recipeView.default.render(model.state.recipe);
-  } catch (error) {
-    alert(error);
+  } catch (err) {
+    _recipeView.default.renderError();
   }
 };
 
 controlRecipes();
-[`hashchange`, `load`].forEach(ev => window.addEventListener(ev, controlRecipes));
+
+const init = function () {
+  _recipeView.default.addHandlerRender(controlRecipes);
+};
+
+init();
 },{"core-js/modules/web.immediate.js":"140df4f8e97a45c53c66fead1f5a9e92","core-js/modules/web.url.js":"a66c25e402880ea6b966ee8ece30b6df","core-js/modules/web.url.to-json.js":"6357c5a053a36e38c0e24243e550dd86","core-js/modules/web.url-search-params.js":"2494aebefd4ca447de0ef4cfdd47509e","q":"79fa48f5262d250aa23868f2ed4cb43d","./model.js":"aabf248f40f7693ef84a0cb99f385d1f","./views/recipeView.js":"bcae1aced0301b01ccacb3e6f7dfede8"}],"140df4f8e97a45c53c66fead1f5a9e92":[function(require,module,exports) {
 var $ = require('../internals/export');
 
@@ -6251,6 +6256,7 @@ const loadRecipe = async function (id) {
   } catch (err) {
     // Temp error handling
     console.error(`${err} 🎈🎈`);
+    throw err;
   }
 };
 
@@ -7062,8 +7068,6 @@ var _fractional = require("fractional");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classPrivateFieldGet(receiver, privateMap) { var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get"); return _classApplyDescriptorGet(receiver, descriptor); }
 
 function _classApplyDescriptorGet(receiver, descriptor) { if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
@@ -7079,6 +7083,10 @@ function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.
 var _parentElement = new WeakMap();
 
 var _data = new WeakMap();
+
+var _errorMessage = new WeakMap();
+
+var _message = new WeakMap();
 
 var _clear = new WeakSet();
 
@@ -7104,17 +7112,14 @@ class RecipeView {
       value: void 0
     });
 
-    _defineProperty(this, "renderSpinner", function () {
-      const markup = `
-      <div class="spinner">
-        <svg>
-          <use href="${_icons.default}#icon-loader"></use>
-        </svg>
-      </div>
-    `;
-      _classPrivateFieldGet(this, _parentElement).innerHTML = ``;
+    _errorMessage.set(this, {
+      writable: true,
+      value: `We could not find that recipe. Please try another one!`
+    });
 
-      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML(`afterbegin`, markup);
+    _message.set(this, {
+      writable: true,
+      value: ``
     });
   }
 
@@ -7126,6 +7131,58 @@ class RecipeView {
     _classPrivateMethodGet(this, _clear, _clear2).call(this);
 
     _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML(`afterbegin`, markup);
+  }
+
+  renderSpinner() {
+    const markup = `
+      <div class="spinner">
+        <svg>
+          <use href="${_icons.default}#icon-loader"></use>
+        </svg>
+      </div>
+    `;
+
+    _classPrivateMethodGet(this, _clear, _clear2).call(this);
+
+    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML(`afterbegin`, markup);
+  }
+
+  renderError(message = _classPrivateFieldGet(this, _errorMessage)) {
+    const markup = `
+      <div class="message">
+            <div>
+              <svg>
+                <use href="${_icons.default}#icon-smile"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>
+      `;
+
+    _classPrivateMethodGet(this, _clear, _clear2).call(this);
+
+    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML(`afterbegin`, markup);
+  }
+
+  renderMessage(message = _classPrivateFieldGet(this, _message)) {
+    const markup = `
+      <div class="error">
+            <div>
+              <svg>
+                <use href="${_icons.default}#icon-alert-triangle"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>
+      `;
+
+    _classPrivateMethodGet(this, _clear, _clear2).call(this);
+
+    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML(`afterbegin`, markup);
+  }
+
+  addHandlerRender(handler) {
+    [`hashchange`, `load`].forEach(ev => window.addEventListener(ev, handler));
   }
 
 }
